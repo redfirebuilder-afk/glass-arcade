@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0b0618">
+<meta name="description" content="Glass Arcade — коллекция классических мини-игр в стиле iOS Liquid Glass. Змейка, Тетрис, 2048, Арканоид и другие.">
+<title>Glass Arcade — игры в жидком стекле</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕹️</text></svg>">
+</head>
+<body>
+
+<!-- ===== SVG: фильтр настоящего преломления для стекла ===== -->
+<svg class="svg-defs" aria-hidden="true">
+  <defs>
+    <filter id="liquid-lens" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.008 0.014" numOctaves="2" seed="7" result="noise">
+        <animate attributeName="baseFrequency" dur="22s" values="0.008 0.014;0.011 0.009;0.008 0.014" repeatCount="indefinite"/>
+      </feTurbulence>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="46" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="liquid-lens-strong" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.012 0.02" numOctaves="2" seed="3" result="noise2"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise2" scale="80" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
+
+<!-- ===== Переливающийся фон ===== -->
+<div class="aurora" aria-hidden="true">
+  <div class="aurora__blob aurora__blob--1"></div>
+  <div class="aurora__blob aurora__blob--2"></div>
+  <div class="aurora__blob aurora__blob--3"></div>
+  <div class="aurora__blob aurora__blob--4"></div>
+  <div class="aurora__iridescence"></div>
+  <div class="aurora__grain"></div>
+  <div class="aurora__stripes"></div>
+</div>
+
+<div class="page">
+
+  <!-- ===== Шапка ===== -->
+  <header class="hero">
+    <div class="hero__badge glass glass--pill">
+      <span class="hero__dot"></span> 6 игр · офлайн · без рекламы
+    </div>
+    <h1 class="hero__title">GLASS<br><span class="hero__title-accent">ARCADE</span></h1>
+    <p class="hero__sub">Классика аркад, переплавленная в жидкое стекло.<br>Свайпы на телефоне, клавиатура на ПК.</p>
+  </header>
+
+  <!-- ===== Сетка игр ===== -->
+  <main class="grid" id="grid"></main>
+
+  <footer class="footer">
+    <p>Собрано на чистом HTML / CSS / JS · рекорды хранятся на вашем устройстве</p>
+  </footer>
+</div>
+
+<!-- ===== Модальное окно игры ===== -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal__backdrop" id="modalBackdrop"></div>
+  <div class="modal__sheet glass" id="modalSheet">
+    <div class="modal__bar">
+      <button class="iconbtn" id="btnClose" aria-label="Закрыть игру">✕</button>
+      <div class="modal__titlewrap">
+        <span class="modal__emoji" id="modalEmoji"></span>
+        <h2 class="modal__title" id="modalTitle"></h2>
+      </div>
+      <button class="iconbtn" id="btnPause" aria-label="Пауза">⏸</button>
+    </div>
+    <div class="modal__hud">
+      <div class="hud glass glass--pill"><span class="hud__label">Счёт</span><span class="hud__value" id="hudScore">0</span></div>
+      <div class="hud glass glass--pill"><span class="hud__label">Рекорд</span><span class="hud__value" id="hudBest">0</span></div>
+    </div>
+    <div class="modal__stage" id="stage"></div>
+    <div class="modal__hint" id="hint"></div>
+    <div class="touchpad" id="touchpad" hidden>
+      <button class="touchpad__btn glass" data-dir="up" aria-label="Вверх">▲</button>
+      <div class="touchpad__row">
+        <button class="touchpad__btn glass" data-dir="left" aria-label="Влево">◀</button>
+        <button class="touchpad__btn touchpad__btn--act glass" data-dir="action" aria-label="Действие">●</button>
+        <button class="touchpad__btn glass" data-dir="right" aria-label="Вправо">▶</button>
+      </div>
+      <button class="touchpad__btn glass" data-dir="down" aria-label="Вниз">▼</button>
+    </div>
+  </div>
+
+  <!-- Оверлей: старт / пауза / конец игры -->
+  <div class="overlay" id="overlay" hidden>
+    <div class="overlay__card glass">
+      <div class="overlay__emoji" id="overlayEmoji">🎮</div>
+      <h3 class="overlay__title" id="overlayTitle">Готовы?</h3>
+      <p class="overlay__text" id="overlayText"></p>
+      <button class="cta" id="overlayBtn">Играть</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/games/snake.js"></script>
+<script src="js/games/tetris.js"></script>
+<script src="js/games/g2048.js"></script>
+<script src="js/games/breakout.js"></script>
+<script src="js/games/flappy.js"></script>
+<script src="js/games/memory.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

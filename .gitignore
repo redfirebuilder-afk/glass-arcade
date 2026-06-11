@@ -1,0 +1,7 @@
+# НИКОГДА не коммитим секреты
+token.txt
+*.token
+.env
+
+__pycache__/
+.DS_Store
